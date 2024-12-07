@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login and Signup</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      overflow: hidden;
+    }
+    .tabs {
+      display: flex;
+      background: #f1f1f1;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .tab.active {
+      background: #2a5298;
+      color: white;
+    }
+    .form {
+      padding: 20px;
+      margin: 10px;
+      display: none;
+    }
+    .form.active {
+      display: block;
+    }
+    .form h2 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      color: #333;
+    }
+    .form input {
+      width: 95%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .form p {
+      margin-bottom: 10px;
+    }
+    .form button {
+      width: 100%;
+      padding: 10px;
+      background: #2a5298;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+    .form button:hover {
+      background: #092353;
+    }
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      margin: 5px 0 0;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="tabs">
+    <div class="tab active" id="login-tab">Login</div>
+    <div class="tab" id="signup-tab">Signup</div>
+  </div>
+  <div class="form active" id="login-form">
+    <h2>Login</h2>
+    <input type="email" id="login-email" placeholder="Email Address" required>
+    <p id="login-email-error" class="error"></p>
+    <input type="password" id="login-password" placeholder="Password" required>
+    <button onclick="handleLogin()">Login</button>
+  </div>
+  <div class="form" id="signup-form">
+    <h2>Signup</h2>
+    <input type="email" id="signup-email" placeholder="Email Address" required>
+    <p id="signup-email-error" class="error"></p>
+    <input type="password" id="signup-password" placeholder="Password" required>
+    <button onclick="handleSignup()">Signup</button>
+  </div>
+</div>
+
+<script>
+  // Tab switching logic
+  const loginTab = document.getElementById('login-tab');
+  const signupTab = document.getElementById('signup-tab');
+  const loginForm = document.getElementById('login-form');
+  const signupForm = document.getElementById('signup-form');
+
+  loginTab.addEventListener('click', () => switchTab(loginTab, loginForm, signupTab, signupForm));
+  signupTab.addEventListener('click', () => switchTab(signupTab, signupForm, loginTab, loginForm));
+
+  function switchTab(activeTab, activeForm, inactiveTab, inactiveForm) {
+    activeTab.classList.add('active');
+    inactiveTab.classList.remove('active');
+    activeForm.classList.add('active');
+    inactiveForm.classList.remove('active');
+  }
+
+  // Email validation helper
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  // Error handling helper
+  function setErrorMessage(elementId, message) {
+    document.getElementById(elementId).innerText = message;
+  }
+
+  function clearErrorMessages() {
+    setErrorMessage('login-email-error', '');
+    setErrorMessage('signup-email-error', '');
+  }
+
+  // Login handler
+  function handleLogin() {
+    clearErrorMessages();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    if (!isValidEmail(email)) {
+      setErrorMessage('login-email-error', 'Endereço de e-mail inválido');
+      return;
+    }
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(() => {
+              sessionStorage.setItem('isLoggedIn', 'true');
+              window.location.href = "./registo_atividades_diárias.html";
+              // alert('Login successful!')
+            })
+            .catch((error) => alert('Login failed: ' + error.message));
+  }
+
+  // Signup handler
+  function handleSignup() {
+    clearErrorMessages();
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+
+    if (!isValidEmail(email)) {
+      setErrorMessage('signup-email-error', 'Endereço de e-mail inválido');
+      return;
+    }
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(() => alert('O registo foi realizado com sucesso! Vá em frente e faça login.'))
+            .catch((error) => alert('Falha na inscrição: ' + error.message));
+  }
+</script>
+
+<!-- Firebase Scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script>
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDQAtwrKEj5MMVQLz5AqfWo12eZl_rYToU",
+    authDomain: "registosrestritos.firebaseapp.com",
+    projectId: "registosrestritos",
+    storageBucket: "registosrestritos.appspot.com",
+    messagingSenderId: "77788477812",
+    appId: "1:77788477812:web:3c34389044d6f24c875421"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+</script>
+</body>
+</html>

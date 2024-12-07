@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Estilos gerais */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    /* Estilos para as seções */
+    .section {
+      margin-bottom: 20px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    /* Cores de fundo distintas para cada seção */
+    .section.dados-gerais {
+      background-color: #e9ecef; /* Mais claro */
+    }
+
+    .section.data-utilizacao {
+      background-color: #dee2e6; /* Tom intermédio */
+    }
+
+    .section.atividade-documentos {
+      background-color: #ced4da; /* Mais escuro */
+    }
+
+    /* Estilos para os campos */
+    .section label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+      text-indent: 10px; /* Ajuste para alinhar mais à esquerda */
+    }
+
+    /* Ajustar larguras dos campos */
+    .section input, .section select {
+      padding: 6px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    /* Largura específica de campos */
+    #hora {
+      width: 100px; /* Largura ajustada para a hora */
+    }
+
+    #turma {
+      width: 150px; /* Largura ajustada para o número da turma */
+    }
+
+    #num-documentos {
+      width: 80px; /* Largura ajustada para a quantidade de documentos */
+    }
+
+    #nome-utilizador {
+      width: 150px; /* Ajustar dropdown para o nome do utilizador */
+    }
+
+    /* Estilo especial para o campo de atividade */
+    #atividade {
+      width: calc(100% - 40px); /* Ajuste para manter a mesma distância da esquerda e direita */
+      margin-right: 10px; /* Ajusta a margem para equilibrar */
+    }
+
+    button {
+      display: block;
+      width: 50%; /* Reduzido para 50% da largura */
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-transform: uppercase; /* Colocar o texto em maiúsculas */
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .hidden-bar {
+      display: none; /* Esconde a barra extra */
+    }
+
+  </style>
+  <script>
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+      // Redirect to the login page if not logged in
+      window.location.href = "./login.html";
+    } else {
+      // After the user accesses the page, reset the session flag to prevent further access
+      sessionStorage.setItem('isLoggedIn', 'false');
+    }
+  // Função para preencher a data e hora automaticamente
+  window.onload = function() {
+    const now = new Date();
+  const dataCampo = document.getElementById('dia');
+  const horaCampo = document.getElementById('hora');
+
+  // Formatar data e hora
+  const dataFormatada = now.toLocaleDateString('pt-PT');
+      const horaFormatada = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+
+      // Definir valores automáticos
+      dataCampo.value = dataFormatada;
+      horaCampo.value = horaFormatada;
+    }
+
+    // Função para permitir dropdownlist e entrada manual
+    function criarDropdownEEntradaManual(id, opcoes) {
+      const campo = document.getElementById(id);
+      campo.innerHTML = opcoes.map(op => `<option value="${op}">${op}</option>`).join('');
+    }
+
+    // Exemplo de dados da base de dados
+    const utilizadores = ['Utilizador 1', 'Utilizador 2', 'Utilizador 3'];
+    const turmas = ['A1', 'B2', 'C3', 'D4'];
+    const atividades = ['Leitura', 'Pesquisa', 'Outro'];
+
+    window.onload = function() {
+      criarDropdownEEntradaManual('nome-utilizador', utilizadores);
+      criarDropdownEEntradaManual('turma', turmas);
+      criarDropdownEEntradaManual('atividade', atividades);
+    }
+  </script>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Registo de Atividades Diárias</h1>
+
+    <!-- Secção Dados Gerais -->
+    <div class="section dados-gerais">
+      <h3>Dados Gerais</h3>
+      <label for="nome-utilizador">Nome do Utilizador</label>
+      <select id="nome-utilizador">
+        <!-- Dropdown será preenchida automaticamente -->
+      </select>
+      <label for="turma">Turma</label>
+      <select id="turma">
+        <!-- Dropdown será preenchida automaticamente -->
+      </select>
+    </div>
+
+    <!-- Secção Data de Utilização (Automática) -->
+    <div class="section data-utilizacao">
+      <h3>Data de Utilização</h3>
+      <label for="dia">Dia</label>
+      <input type="text" id="dia" readonly> <!-- Preenchido automaticamente -->
+      <label for="hora">Hora</label>
+      <input type="text" id="hora" readonly> <!-- Preenchido automaticamente -->
+    </div>
+
+    <!-- Secção Atividade e Documentos Consultados -->
+    <div class="section atividade-documentos">
+      <h3>Atividade e Documentos Consultados</h3>
+      <label for="atividade">Atividade</label>
+      <select id="atividade">
+        <!-- Dropdown será preenchida automaticamente -->
+      </select>
+      <label for="num-documentos">N.º de Documentos Consultados</label>
+      <input type="number" id="num-documentos" placeholder="Quantidade de documentos">
+    </div>
+
+    <!-- Botão SUBMETER -->
+    <button type="submit">SUBMETER</button>
+
+  </div>
+  </script>
+
+</body>
+</html>
+
+
+
+
+
