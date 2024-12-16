@@ -151,6 +151,7 @@
     firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
               sessionStorage.setItem('isLoggedIn', 'true');
+              console.log('need to redirect')
               window.location.href = "https://sites.google.com/view/test-escolard/registos-mian";
               // alert('Login successful!')
             })
