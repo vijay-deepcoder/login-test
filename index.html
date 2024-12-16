@@ -95,14 +95,14 @@
     <input type="password" id="login-password" placeholder="Password" required>
     <button onclick="handleLogin()">Login</button>
   </div>
-  <div class="form" id="signup-form">
+<!--   <div class="form" id="signup-form">
     <h2>Signup</h2>
     <input type="email" id="signup-email" placeholder="Email Address" required>
     <p id="signup-email-error" class="error"></p>
     <input type="password" id="signup-password" placeholder="Password" required>
     <button onclick="handleSignup()">Signup</button>
   </div>
-</div>
+</div> -->
 
 <script>
   // Tab switching logic
@@ -151,7 +151,7 @@
     firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
               sessionStorage.setItem('isLoggedIn', 'true');
-              window.location.href = "https://sites.google.com/view/test-escolard/recursos";
+              window.location.href = "https://sites.google.com/view/test-escolard/registos-mian";
               // alert('Login successful!')
             })
             .catch((error) => alert('Login failed: ' + error.message));
