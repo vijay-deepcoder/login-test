@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login and Signup</title>
+  <title>Login</title>
   <style>
     body {
       margin: 0;
@@ -22,29 +22,9 @@
       width: 400px;
       overflow: hidden;
     }
-    .tabs {
-      display: flex;
-      background: #f1f1f1;
-    }
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 15px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-    .tab.active {
-      background: #2a5298;
-      color: white;
-    }
     .form {
       padding: 20px;
       margin: 10px;
-      display: none;
-    }
-    .form.active {
-      display: block;
     }
     .form h2 {
       margin-bottom: 20px;
@@ -84,43 +64,16 @@
 </head>
 <body>
 <div class="container">
-  <div class="tabs">
-    <div class="tab active" id="login-tab">Login</div>
-<!--     <div class="tab" id="signup-tab">Signup</div> -->
-  </div>
-  <div class="form active" id="login-form">
+  <div class="form" id="login-form">
     <h2>Login</h2>
     <input type="email" id="login-email" placeholder="Email Address" required>
     <p id="login-email-error" class="error"></p>
     <input type="password" id="login-password" placeholder="Password" required>
     <button onclick="handleLogin()">Login</button>
   </div>
-<!--   <div class="form" id="signup-form">
-    <h2>Signup</h2>
-    <input type="email" id="signup-email" placeholder="Email Address" required>
-    <p id="signup-email-error" class="error"></p>
-    <input type="password" id="signup-password" placeholder="Password" required>
-    <button onclick="handleSignup()">Signup</button>
-  </div>
-</div> -->
+</div>
 
 <script>
-  // Tab switching logic
-  const loginTab = document.getElementById('login-tab');
-  const signupTab = document.getElementById('signup-tab');
-  const loginForm = document.getElementById('login-form');
-  const signupForm = document.getElementById('signup-form');
-
-  loginTab.addEventListener('click', () => switchTab(loginTab, loginForm, signupTab, signupForm));
-  signupTab.addEventListener('click', () => switchTab(signupTab, signupForm, loginTab, loginForm));
-
-  function switchTab(activeTab, activeForm, inactiveTab, inactiveForm) {
-    activeTab.classList.add('active');
-    inactiveTab.classList.remove('active');
-    activeForm.classList.add('active');
-    inactiveForm.classList.remove('active');
-  }
-
   // Email validation helper
   function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -134,7 +87,6 @@
 
   function clearErrorMessages() {
     setErrorMessage('login-email-error', '');
-    setErrorMessage('signup-email-error', '');
   }
 
   // Login handler
@@ -144,34 +96,21 @@
     const password = document.getElementById('login-password').value;
 
     if (!isValidEmail(email)) {
-      setErrorMessage('login-email-error', 'Endereço de e-mail inválido');
+      setErrorMessage('login-email-error', 'Invalid email address');
+      return;
+    }
+
+    if (!password) {
+      alert('Password is required');
       return;
     }
 
     firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
               sessionStorage.setItem('isLoggedIn', 'true');
-              console.log('need to redirect')
               window.location.href = "https://sites.google.com/view/test-escolard/registos-mian";
-              // alert('Login successful!')
             })
             .catch((error) => alert('Login failed: ' + error.message));
-  }
-
-  // Signup handler
-  function handleSignup() {
-    clearErrorMessages();
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-
-    if (!isValidEmail(email)) {
-      setErrorMessage('signup-email-error', 'Endereço de e-mail inválido');
-      return;
-    }
-
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(() => alert('O registo foi realizado com sucesso! Vá em frente e faça login.'))
-            .catch((error) => alert('Falha na inscrição: ' + error.message));
   }
 </script>
 
