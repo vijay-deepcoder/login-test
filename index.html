@@ -151,7 +151,7 @@
     firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
               sessionStorage.setItem('isLoggedIn', 'true');
-              window.location.href = "./registo_atividades_diárias.html";
+              window.location.href = "https://sites.google.com/view/test-escolard/registos-mian";
               // alert('Login successful!')
             })
             .catch((error) => alert('Login failed: ' + error.message));
